@@ -14,8 +14,8 @@ class Darwin :
   world - the actual game board. 2D list with empty space tokens and stores pointers to creature instances
   
   World Attribute Variables
-  x_max - maximum horizontal expanse of the world
-  y_max - maximum vertical exxpanse of the world
+  j_max - maximum horizontal expanse of the world
+  i_max - maximum vertical exxpanse of the world
   turns - keeps track of number of turns of the simulation has been run
   
   Creature Tracking Variables. Keep track of whats in front of creatures when running the game board.
@@ -33,6 +33,7 @@ class Darwin :
     assert type(vert_size) == int
     assert type(hor_size) == int
     
+    
     self.world = []
     for j in range(vert_size):
       self.world.append([])
@@ -40,47 +41,48 @@ class Darwin :
         self.world[j].append('.')
     
     
-    self.x_max = hor_size - 1
-    self.y_max = vert_size - 1
+    self.j_max = hor_size - 1
+    self.i_max = vert_size - 1
     self.turns = 0
     
     self.empty = None
     self.wall = None    
     self.enemy = None
-  def add(self,c,x,y):
+  def add(self,c,i,j):
     '''
     Add creature to the world if space is empty
     '''
-    if(x <= self.x_max and y <= self.y_max):
-      self.world[y][x] = c
+    assert type(c) == Creature
+    if(j <= self.j_max and i <= self.i_max):
+      self.world[i][j] = c
     
 
-  def go(self,x,y):
+  def go(self,i,j):
     '''
     If empty does nothing. Otherwise, tells creature to 'go' and execute its next action.
     '''
-    assert y <= self.y_max
-    assert x <= self.x_max
+    assert i <= self.i_max
+    assert j <= self.j_max
     
-    if(self.world[y][x] == '.'):
+    if(self.world[i][j] == '.'):
       return 
       
-    dir = self.world[y][x].getDirection()
+    dir = self.world[i][j].getDirection()
 
-    assert type(y) == int
-    assert type(x) == int
+    assert type(i) == int
+    assert type(j) == int
 
     #Assign the status variables.
     if(dir == 'north'):
-      if(y == 0):
+      if(i == 0):
         self.wall = True
         self.empty = False
         self.enemy = False
-      elif(self.world[y-1][x] != '.'):
+      elif(self.world[i-1][j] != '.'):
         self.empty = False
         self.wall = False
         
-        if(str(self.world[y-1][x]) == str(self.world[y][x])):
+        if(str(self.world[i-1][j]) == str(self.world[i][j])):
           self.enemy = False
         else:
           self.enemy = True
@@ -89,14 +91,14 @@ class Darwin :
         self.wall = False
         self.enemy = False
     elif(dir == 'south'):
-      if(y == self.y_max):
+      if(i == self.i_max):
         self.wall = True
         self.empty = False
         self.enemy = False
-      elif(self.world[y+1][x] != '.'):
+      elif(self.world[i+1][j] != '.'):
         self.empty = False
         self.wall = False
-        if(str(self.world[y+1][x]) == str(self.world[y][x])):
+        if(str(self.world[i+1][j]) == str(self.world[i][j])):
           self.enemy = False
         else:
           self.enemy = True
@@ -105,14 +107,14 @@ class Darwin :
         self.wall = False
         self.enemy = False    
     elif(dir == 'west'):
-      if(x == 0):
+      if(j == 0):
         self.wall = True
         self.empty = False
         self.enemy = False
-      elif(self.world[y][x-1] != '.'):
+      elif(self.world[i][j-1] != '.'):
         self.empty = False
         self.wall = False
-        if(str(self.world[y][x-1]) == str(self.world[y][x])):
+        if(str(self.world[i][j-1]) == str(self.world[i][j])):
           self.enemy = False
         else:
           self.enemy = True
@@ -121,14 +123,14 @@ class Darwin :
         self.wall = False
         self.enemy = False
     elif(dir == 'east'):
-      if(x == self.x_max):
+      if(j == self.j_max):
         self.wall = True
         self.empty = False
         self.enemy = False
-      elif(self.world[y][x+1] != '.'):
+      elif(self.world[i][j+1] != '.'):
         self.empty = False
         self.wall = False
-        if(str(self.world[y][x+1]) == str(self.world[y][x])):
+        if(str(self.world[i][j+1]) == str(self.world[i][j])):
           self.enemy = False
         else:
           self.enemy = True
@@ -145,17 +147,17 @@ class Darwin :
       If creature has nothing obstructing it, it hops forward one space
       '''
       if(dir == 'north' and self.empty) :
-        self.world[y-1][x] = c
-        self.world[y][x] = '.'
+        self.world[i-1][j] = c
+        self.world[i][j] = '.'
       elif(dir == 'south' and self.empty) :
-        self.world[y + 1][x] = c
-        self.world[y][x] = '.'
+        self.world[i + 1][j] = c
+        self.world[i][j] = '.'
       elif(dir == 'west' and self.empty) :
-        self.world[y][x-1] = c
-        self.world[y][x] = '.'
+        self.world[i][j-1] = c
+        self.world[i][j] = '.'
       elif(dir == 'east' and self.empty) :
-        self.world[y][x+1] = c
-        self.world[y][x] = '.'
+        self.world[i][j+1] = c
+        self.world[i][j] = '.'
       
     def infect (c) : 
       '''
@@ -164,21 +166,21 @@ class Darwin :
       assert type(c) == Creature
       dir = c.getDirection()
       if(dir == 'north' and self.enemy) :
-        self.world[y - 1][x].getInfected(c)
+        self.world[i - 1][j].getInfected(c)
       elif(dir == 'south' and self.enemy) :
-        self.world[y + 1][x].getInfected(c)
+        self.world[i + 1][j].getInfected(c)
       elif(dir == 'west' and self.enemy) :
-        self.world[y][x - 1].getInfected(c)
+        self.world[i][j - 1].getInfected(c)
       elif(dir == 'east' and self.enemy) :
-        self.world[y][x + 1].getInfected(c)
+        self.world[i][j + 1].getInfected(c)
         
     #Now tell the creature to go
-    cmd = self.world[y][x].execute()
+    cmd = self.world[i][j].execute(self)
     
     if(cmd == 'hop'):
-      hop(self.world[y][x])
+      hop(self.world[i][j])
     elif(cmd == 'infect'):
-      infect(self.world[y][x])
+      infect(self.world[i][j])
     
   
       
@@ -191,11 +193,11 @@ class Darwin :
     self.turns += 1
     done = []
     
-    for i in range(self.y_max+1):
-      for j in range(self.x_max+1):
+    for i in range(self.i_max+1):
+      for j in range(self.j_max+1):
         if(self.world[i][j] not in done):
           done.append(self.world[i][j])         
-          self.go(j,i)
+          self.go(i,j)
          
           
   '''
@@ -223,12 +225,12 @@ class Darwin :
     Returns the grid in printable form
     '''
     s = '  '
-    for i in range(self.x_max+1):
+    for i in range(self.j_max+1):
       s += str(i)
     s += '\n'
-    for i in range(self.y_max+1):
+    for i in range(self.i_max+1):
       s += str(i) + ' '
-      for j in range(self.x_max+1):
+      for j in range(self.j_max+1):
         s+= str(self.world[i][j])
       s += '\n' 
     
@@ -269,9 +271,10 @@ class Creature :
     self.direction = direction
     self.counter = 0
     self.actions = ['hop', 'infect', 'left', 'right']
-  def execute(self):
+  def execute(self,d = Darwin(1,1)):
     '''
     Creature executes directions until executing an action move. Returns that action move to the game board. 
+    d - is a game board.
     '''
     while True:
       cmd = self.species.getInstruction(self.counter)
@@ -281,13 +284,13 @@ class Creature :
         break
       
       #Execute control commands.
-      if(cmd[:-2] == 'if_empty' and d.isEmpty(self)):
+      if(cmd[:-2] == 'if_empty' and d.isEmpty()):
         self.counter = int(cmd[-1])
         continue
       if(cmd[:-2] == 'if_empty'):
         self.counter += 1
         continue
-      if(cmd[:-2] == 'if_enemy' and d.isEnemy(self)):
+      if(cmd[:-2] == 'if_enemy' and d.isEnemy()):
         self.counter = int(cmd[-1])
         continue
       if(cmd[:-2] == 'if_enemy'):

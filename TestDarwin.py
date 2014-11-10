@@ -225,7 +225,7 @@ class TestDarwin(TestCase):
     c2 = Creature(s,'south')
     c3 = Creature(s,'south')
     d.add(c1,0,0)
-    d.add(c2,1,0)
+    d.add(c2,0,1)
     self.assertEqual(str(d),'  012\n0 cc.\n')
   def test_darwin5(self):  
     d = Darwin(1,3)
@@ -234,8 +234,8 @@ class TestDarwin(TestCase):
     c2 = Creature(s,'south')
     c3 = Creature(s,'south')    
     d.add(c1,0,0)
-    d.add(c2,1,0)
-    d.add(c2,2,0)
+    d.add(c2,0,1)
+    d.add(c2,0,2)
     self.assertEqual(str(d), '  012\n0 ccc\n')
     
   #go - hop
@@ -244,23 +244,23 @@ class TestDarwin(TestCase):
     s = Species('dog')
     s.addInstruction('hop')
     c = Creature(s,'south')
-    d.add(c,1,0)
-    d.go(1,0)
+    d.add(c,0,1)
+    d.go(0,1)
     self.assertEqual(str(d),'  01\n0 ..\n1 .d\n')
   def test_darwin7(self):
     d = Darwin(2,2)
     s = Species('dog')
     s.addInstruction('hop')
     c = Creature(s,'north')
-    d.add(c,1,0)
-    d.go(1,0)
+    d.add(c,0,1)
+    d.go(0,1)
     self.assertEqual(str(d),'  01\n0 .d\n1 ..\n')
   def test_darwin8(self):
     d = Darwin(2,2)
     s = Species('dog')
     c = Creature(s,'south')
-    d.add(c,1,0)
-    d.go(1,1)
+    d.add(c,0,1)
+    d.go(0,0)
     self.assertEqual(str(d),'  01\n0 .d\n1 ..\n')
   
   #turn  
@@ -369,7 +369,7 @@ class TestDarwin(TestCase):
     c = Creature(s,'east')
     c1 = Creature(s1,'east')
     d.add(c,0,0)
-    d.add(c1,1,0)
+    d.add(c1,0,1)
     d.go(0,0)
     self.assertEqual(True,d.isEnemy()) 
 
@@ -390,7 +390,7 @@ class TestDarwin(TestCase):
     d.add(c,0,0)
     s1 = Species('dog')
     c1 = Creature(s,'east')
-    d.add(c,1,0)
+    d.add(c,0,1)
     d.go(0,0)
     self.assertEqual(str(d), '  01\n0 cc\n')
   def test_darwin23(self):
