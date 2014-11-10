@@ -53,7 +53,7 @@ class Darwin :
     Add creature to the world if space is empty
     '''
     assert type(c) == Creature
-    if(j <= self.j_max and i <= self.i_max):
+    if(j <= self.j_max and i <= self.i_max and self.world[i][j] == '.'):
       self.world[i][j] = c
     
 

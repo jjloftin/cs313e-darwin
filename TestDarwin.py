@@ -201,6 +201,20 @@ class TestDarwin(TestCase):
     
     c.getInfected(c1)
     self.assertEqual(c.species.name,c1.species.name)
+  #execute again
+  def test_creature18(self):
+    s = Species('dog')
+    c = Creature(s,'east')
+    s.addInstruction('hop')
+    s.addInstruction('if_enemy 2')
+    s.addInstruction('if_empty 3')
+    s.addInstruction('if_random 4')
+    s.addInstruction('go 0')
+    d = Darwin(2,2)
+    d.add(c,0,0)
+    d.go(0,0)
+    cmd = c.execute()
+    self.assertEqual(cmd, 'hop')
   #Darwin
   def test_darwin1(self):
     d = Darwin(2,2)
