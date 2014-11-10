@@ -226,10 +226,10 @@ class Darwin :
     '''
     s = '  '
     for i in range(self.j_max+1):
-      s += str(i)
+      s += str(i%10)
     s += '\n'
     for i in range(self.i_max+1):
-      s += str(i) + ' '
+      s += str(i%10) + ' '
       for j in range(self.j_max+1):
         s+= str(self.world[i][j])
       s += '\n' 
